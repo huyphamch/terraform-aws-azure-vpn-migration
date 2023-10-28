@@ -78,13 +78,6 @@ resource "aws_vpn_gateway_route_propagation" "main" {
   route_table_id = aws_route_table.vpn-route-table.id
 }
 
-# Assign vpn gateway to route table
-resource "aws_route" "incoming-route" {
-  destination_cidr_block = element(var.azure_vm_subnet_prefix, 0)
-  gateway_id             = aws_vpn_gateway.vpn-gw.id
-  route_table_id         = aws_route_table.vpn-route-table.id
-}
-
 # Create Site-2-Site VPN Connection between VPG (AWS) and CGW (Azure)
 resource "aws_vpn_connection" "ToAzureInstance0" {
   vpn_gateway_id      = aws_vpn_gateway.vpn-gw.id
