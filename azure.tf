@@ -135,7 +135,7 @@ resource "azurerm_network_security_rule" "nsg-aws-vm-rule" {
   protocol                    = "Icmp"
   source_port_range           = "*"
   destination_port_range      = "*"
-  source_address_prefix       = var.aws_vpc_cidr_block
+  source_address_prefix       = aws_vpc.aws-vpc.cidr_block
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.vpn-rg.name
   network_security_group_name = azurerm_network_security_group.nsg-vm.name
