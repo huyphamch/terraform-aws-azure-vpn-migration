@@ -1,7 +1,7 @@
 # Configure the Azure Provider
 provider "azurerm" {
-  subscription_id = "87948765-5c07-4a92-819f-251defd8eefd"
-  tenant_id       = "110458cf-bec0-44ed-b15e-0658edf1c1f8"
+  subscription_id = "275a197d-73f1-4329-8cde-9eb0ea15468b"
+  tenant_id       = "ce512c9e-fc8a-4acd-9b9f-1f53911d8ed4"
   features {}
 }
 
@@ -168,7 +168,7 @@ resource "azurerm_network_interface_security_group_association" "vm-sg-asoc" {
 }
 
 # Create Virtual Machine (VM)
-resource "azurerm_linux_virtual_machine" "main" {
+resource "azurerm_linux_virtual_machine" "vm-linux" {
   name                            = "${var.prefix}-vm"
   resource_group_name             = azurerm_resource_group.vpn-rg.name
   location                        = azurerm_resource_group.vpn-rg.location

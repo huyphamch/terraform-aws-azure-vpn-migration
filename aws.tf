@@ -57,8 +57,6 @@ resource "aws_customer_gateway" "ToAzureInstance0" {
   ip_address = azurerm_public_ip.VNet1GWpip.ip_address
   type       = "ipsec.1"
 
-  depends_on = [ azurerm_public_ip.VNet1GWpip ]
-
   tags = {
     Name = "cgw-${var.prefix}"
   }

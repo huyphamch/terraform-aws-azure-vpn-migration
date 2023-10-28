@@ -21,7 +21,7 @@ for this scenario.
 
 ## Usage
 <br /> 1. Open terminal
-<br /> 2. Before you can execute the terraform script, your need to configure your AWS environment first.
+<br /> 2. Before you can execute the terraform script, your need to create your access key and configure your AWS environment first.
 <br /> aws configure
 <br /> AWS Access Key ID: See IAM > Security credentials > Access keys > Create access key
 <br /> AWS Secret Access Key: See IAM > Security credentials > Access keys > Create access key
@@ -29,7 +29,7 @@ for this scenario.
 <br /> Default output format: json
 <br /> 3. Before you can execute the terraform script, your need to configure your Azure environment first.
 <br /> az login --user <myAlias@myCompany.com> --password <myPassword>
-<br /> Update subscription_id in main.tf (Home > Subscriptions)
+<br /> Update subscription_id in main.tf (Login to Azure portal > Home > Subscriptions)
 <br /> Update tenant_id in main.tf (displayed after successful login)
 <br /> 4. Now you can apply the terraform changes.
 <br /> terraform init
