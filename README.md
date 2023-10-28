@@ -11,7 +11,7 @@ for this scenario.
 • Gateways in AWS and Azure
 
 ## Solution
-![Image](https://github.com/huyphamch/terraform-aws-azure-vpn-migration/blob/master/diagrams/IT-Architecture.png)
+![Image](https://github.com/huyphamch/terraform-aws-azure-vpn-migration/blob/main/diagrams/IT-Architecture.png)
 <br />1. Creating a Virtual Network and a subnet in Azure
 <br />2. Creating a Virtual Network Gateway
 <br />3. Creating a Virtual Private Cloud in AWS
