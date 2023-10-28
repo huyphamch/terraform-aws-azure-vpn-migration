@@ -1,7 +1,7 @@
 # Configure the Azure Provider
 provider "azurerm" {
-  subscription_id = "275a197d-73f1-4329-8cde-9eb0ea15468b"
-  tenant_id       = "ce512c9e-fc8a-4acd-9b9f-1f53911d8ed4"
+  subscription_id = "e2499596-2322-475a-9d75-03709e605387"
+  tenant_id       = "060e0528-7980-4f02-aaba-ad2558ba251d"
   features {}
 }
 
@@ -29,7 +29,8 @@ resource "azurerm_public_ip" "VNet1GWpip" {
   location            = azurerm_resource_group.vpn-rg.location
   resource_group_name = azurerm_resource_group.vpn-rg.name
 
-  allocation_method = "Dynamic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
 }
 
 resource "azurerm_virtual_network_gateway" "VNet1GW" {
@@ -144,7 +145,7 @@ resource "azurerm_public_ip" "pip-vm" {
   name                = "pip-vm-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
   resource_group_name = azurerm_resource_group.vpn-rg.name
-  allocation_method = "Dynamic"
+  allocation_method   = "Dynamic"
   sku                 = "Basic"
 }
   
@@ -173,22 +174,29 @@ resource "azurerm_linux_virtual_machine" "vm-linux" {
   resource_group_name             = azurerm_resource_group.vpn-rg.name
   location                        = azurerm_resource_group.vpn-rg.location
   size                            = "Standard_D2s_v3"
+
+  # When an admin_password is specified disable_password_authentication must be set to false. ~> NOTE: One of either admin_password or admin_ssh_key must be specified.
+/*   admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  } */
   admin_username                  = "adminuser"
   admin_password                  = "Admin+123456"
   disable_password_authentication = false
+  
   network_interface_ids = [
     azurerm_network_interface.nic-vm.id,
   ]
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
   }
 
-  os_disk {
-    storage_account_type = "Standard_LRS"
-    caching              = "ReadWrite"
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts-gen2"
+    version   = "latest"
   }
 }

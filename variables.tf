@@ -31,7 +31,7 @@ variable "azure_vm_subnet_prefix" {
 variable "azure_vpn_gateway_sku" {
   description = "Azure Gateway SKU"
   type        = string
-  default     = "Basic" #"VpnGw1"
+  default     = "VpnGw1"
 }
 
 variable "azure_vpn_gateway_asn" {
