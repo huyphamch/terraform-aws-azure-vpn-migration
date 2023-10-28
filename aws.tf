@@ -78,6 +78,12 @@ resource "aws_vpn_gateway_route_propagation" "main" {
   route_table_id = aws_route_table.vpn-route-table.id
 }
 
+# Assign vpn gateway to route table
+resource "aws_route" "incoming-route" {
+  destination_cidr_block = element(var.azure_vm_subnet_prefix, 0)
+  gateway_id             = aws_vpn_gateway.vpn-gw.id
+  route_table_id         = aws_route_table.vpn-route-table.id
+}
 
 # Create Site-2-Site VPN Connection between VPG (AWS) and CGW (Azure)
 resource "aws_vpn_connection" "ToAzureInstance0" {
@@ -96,16 +102,10 @@ resource "aws_vpn_connection" "ToAzureInstance0" {
   }
 }
 
+# Add a static IP prefix route between a VPN connection and a customer gateway.
 resource "aws_vpn_connection_route" "office" {
-  destination_cidr_block = element(var.azure_gateway_subnet_prefix, 0)
+  destination_cidr_block = element(var.azure_vm_subnet_prefix, 0)
   vpn_connection_id      = aws_vpn_connection.ToAzureInstance0.id
-}
-
-# Assign vpn gateway to route table
-resource "aws_route" "incoming-route" {
-  destination_cidr_block = element(var.azure_gateway_subnet_prefix, 0)
-  route_table_id         = aws_route_table.vpn-route-table.id
-  gateway_id             = aws_vpn_gateway.vpn-gw.id
 }
 
 # Create Amazon Linux-Apache2 EC2-template for auto-scaling
@@ -140,7 +140,7 @@ resource "aws_security_group" "security-group-web" {
     from_port   = -1
     to_port     = -1
     protocol    = "icmp"
-    cidr_blocks = var.azure_vnet_prefix
+    cidr_blocks = azurerm_virtual_network.vnet.address_space
   }
 
   egress {

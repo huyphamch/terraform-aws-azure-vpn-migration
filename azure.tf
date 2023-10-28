@@ -1,7 +1,7 @@
 # Configure the Azure Provider
 provider "azurerm" {
-  subscription_id = "275a197d-73f1-4329-8cde-9eb0ea15468b"
-  tenant_id       = "ce512c9e-fc8a-4acd-9b9f-1f53911d8ed4"
+  subscription_id = "129cd528-d534-409f-8308-d62526e46bab"
+  tenant_id       = "427dab8a-bad8-4ee1-a91e-1b653343cd1b"
   features {}
 }
 
@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "vpn-rg" {
   location = var.azure_location
 }
 
-resource "azurerm_virtual_network" "network" {
+resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
   resource_group_name = azurerm_resource_group.vpn-rg.name
@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "network" {
 resource "azurerm_subnet" "vpn-subnet" {
   name                 = "GatewaySubnet" # "vpn-subnet-${var.prefix}"
   resource_group_name  = azurerm_resource_group.vpn-rg.name
-  virtual_network_name = azurerm_virtual_network.network.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.azure_gateway_subnet_prefix
 }
 
@@ -99,7 +99,7 @@ resource "azurerm_virtual_network_gateway_connection" "AWSTunnel2ToInstance0" {
 resource "azurerm_subnet" "subnet-vm" {
   name                 = "subnet-vm-${var.prefix}"
   resource_group_name  = azurerm_resource_group.vpn-rg.name
-  virtual_network_name = azurerm_virtual_network.network.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.azure_vm_subnet_prefix
 }
 

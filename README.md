@@ -28,7 +28,7 @@ for this scenario.
 <br /> Default region name: us-east-1
 <br /> Default output format: json
 <br /> 3. Before you can execute the terraform script, your need to configure your Azure environment first.
-<br /> az login --user <myAlias@myCompany.com> --password <myPassword>
+<br /> az login --user <myAlias@myCompany.onmicrosoft.com> --password <myPassword>
 <br /> Update subscription_id in main.tf (az account subscription list)
 <br /> Update tenant_id in main.tf (az account tenant list)
 <br /> 4. Now you can apply the terraform changes.
