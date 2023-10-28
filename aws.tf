@@ -23,10 +23,10 @@ resource "aws_internet_gateway" "igw-vpn" {
 
 # Create Subnet and attach subnet to route table
 resource "aws_subnet" "vpn-subnet" {
-  vpc_id                  = aws_vpc.aws-vpc.id
-  cidr_block              = var.aws_vm_subnet_prefix
-  availability_zone       = var.availability_zone
-  map_public_ip_on_launch = true
+  vpc_id            = aws_vpc.aws-vpc.id
+  cidr_block        = var.aws_vm_subnet_prefix
+  availability_zone = var.availability_zone
+  # map_public_ip_on_launch = true
 
   tags = {
     Name = "subnet-vpn-${var.prefix}"
@@ -111,8 +111,7 @@ data "aws_ami" "app_ami" {
   }
 }
 
-# Create Amazon Linux-Apache2 EC2-instances
-# 9. Create security group to allow port: Http, Https, SSH, RDP
+# Create security group to allow SSH and ICMP communication
 resource "aws_security_group" "sg-vm" {
   name        = "Allow_inbound_traffic"
   description = "Allow ssh and Azure VNet resources inbound traffic"
@@ -146,7 +145,8 @@ resource "aws_security_group" "sg-vm" {
   }
 }
 
-resource "aws_instance" "web-linux" {
+# Create Amazon Linux-Apache2 EC2-instances
+resource "aws_instance" "ec2-linux" {
   ami                         = data.aws_ami.app_ami.id #"ami-03a6eaae9938c858c" # windows: "ami-0be0e902919675894"
   instance_type               = "t2.micro"
   key_name                    = aws_key_pair.key_pair.key_name

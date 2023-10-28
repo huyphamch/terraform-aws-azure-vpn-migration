@@ -141,7 +141,7 @@ resource "azurerm_network_security_rule" "nsg-aws-vm-rule" {
   network_security_group_name = azurerm_network_security_group.nsg-vm.name
 }
 
-# Create Network interface with public IP for VM
+# Create Network interface for VM
 resource "azurerm_public_ip" "pip-vm" {
   name                = "pip-vm-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
@@ -159,7 +159,7 @@ resource "azurerm_network_interface" "nic-vm" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.subnet-vm.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip-vm.id
+    # public_ip_address_id          = azurerm_public_ip.pip-vm.id
   }
 }
 
@@ -172,7 +172,7 @@ resource "azurerm_network_interface_security_group_association" "vm-sg-asoc" {
 # Create Virtual Machine (VM)
 resource "azurerm_linux_virtual_machine" "vm-linux" {
   name = "vm-linux-${var.prefix}"
-  #  name                = "vm-windowws-${var.prefix}" 
+  # name                = "vm-windowws-${var.prefix}" 
   resource_group_name = azurerm_resource_group.vpn-rg.name
   location            = azurerm_resource_group.vpn-rg.location
   size                = "Standard_D2s_v3"
