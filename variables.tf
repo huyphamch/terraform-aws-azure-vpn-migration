@@ -37,7 +37,7 @@ variable "azure_vpn_gateway_sku" {
 variable "azure_vpn_gateway_asn" {
   description = "Azure Gateway BGP ASN"
   type        = string
-  default     = "65515"
+  default     = "65000" #"65515"
 }
 
 # AWS variables

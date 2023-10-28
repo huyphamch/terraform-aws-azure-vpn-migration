@@ -62,27 +62,37 @@ resource "aws_customer_gateway" "ToAzureInstance0" {
   }
 }
 
-# Create VPN Gateway and attach gateway to VPC
+# Create VPN Gateway and attach gateway to VPC and route table
 resource "aws_vpn_gateway" "vpn-gw" {
   vpc_id            = aws_vpc.aws-vpc.id
   availability_zone = var.availability_zone
 
   tags = {
-    Name = "vpn-gw-${var.prefix}"
+    Name = "vpg-${var.prefix}"
   }
 }
 
+# Add a route to send traffic from AWS to Azure
+resource "aws_vpn_gateway_route_propagation" "main" {
+  vpn_gateway_id = aws_vpn_gateway.vpn-gw.id
+  route_table_id = aws_route_table.vpn-route-table.id
+}
+
+
 # Create Site-2-Site VPN Connection between VPG (AWS) and CGW (Azure)
 resource "aws_vpn_connection" "ToAzureInstance0" {
-  vpn_gateway_id        = aws_vpn_gateway.vpn-gw.id
-  customer_gateway_id   = aws_customer_gateway.ToAzureInstance0.id
-  type                  = "ipsec.1"
-  static_routes_only    = true
+  vpn_gateway_id      = aws_vpn_gateway.vpn-gw.id
+  customer_gateway_id = aws_customer_gateway.ToAzureInstance0.id
+  type                = "ipsec.1"
+  static_routes_only  = true
+
+  # tunnel1_inside_cidr   = azurerm_subnet.vpn-subnet.address_prefixes
+  # tunnel2_inside_cidr   = azurerm_subnet.vpn-subnet.address_prefixes
   tunnel1_preshared_key = random_password.AWSTunnel1ToInstance0-PSK.result
   tunnel2_preshared_key = random_password.AWSTunnel2ToInstance0-PSK.result
 
   tags = {
-    Name = "vpn-con-${var.prefix}"
+    Name = "vpn-${var.prefix}"
   }
 }
 

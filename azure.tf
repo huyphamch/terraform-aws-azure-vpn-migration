@@ -1,7 +1,7 @@
 # Configure the Azure Provider
 provider "azurerm" {
-  subscription_id = "e2499596-2322-475a-9d75-03709e605387"
-  tenant_id       = "060e0528-7980-4f02-aaba-ad2558ba251d"
+  subscription_id = "275a197d-73f1-4329-8cde-9eb0ea15468b"
+  tenant_id       = "ce512c9e-fc8a-4acd-9b9f-1f53911d8ed4"
   features {}
 }
 
@@ -29,8 +29,8 @@ resource "azurerm_public_ip" "VNet1GWpip" {
   location            = azurerm_resource_group.vpn-rg.location
   resource_group_name = azurerm_resource_group.vpn-rg.name
 
-  allocation_method   = "Static"
-  sku                 = "Standard"
+  allocation_method = "Static"
+  sku               = "Standard"
 }
 
 resource "azurerm_virtual_network_gateway" "VNet1GW" {
@@ -53,13 +53,13 @@ resource "azurerm_virtual_network_gateway" "VNet1GW" {
   }
 }
 
-# Create Local network gateway as VPN Endpoint to configure the VPN settings
+# Create Local network gateway as VPN Endpoint (AWS) to configure the VPN settings
 resource "azurerm_local_network_gateway" "AWSTunnel1ToInstance0" {
   name                = "lngw-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
   resource_group_name = azurerm_resource_group.vpn-rg.name
   gateway_address     = aws_vpn_connection.ToAzureInstance0.tunnel1_address
-  address_space       = [var.aws_vpc_cidr_block]
+  address_space       = [aws_vpc.aws-vpc.cidr_block]
 }
 
 resource "azurerm_local_network_gateway" "AWSTunnel2ToInstance0" {
@@ -67,7 +67,7 @@ resource "azurerm_local_network_gateway" "AWSTunnel2ToInstance0" {
   location            = azurerm_resource_group.vpn-rg.location
   resource_group_name = azurerm_resource_group.vpn-rg.name
   gateway_address     = aws_vpn_connection.ToAzureInstance0.tunnel2_address
-  address_space       = [var.aws_vpc_cidr_block]
+  address_space       = [aws_vpc.aws-vpc.cidr_block]
 }
 
 # Create Site-2-Site VPN Connection between VNGW (Azure) and LNGW (AWS)
@@ -148,7 +148,7 @@ resource "azurerm_public_ip" "pip-vm" {
   allocation_method   = "Dynamic"
   sku                 = "Basic"
 }
-  
+
 resource "azurerm_network_interface" "nic-vm" {
   name                = "nic-vm-${var.prefix}"
   resource_group_name = azurerm_resource_group.vpn-rg.name
@@ -170,20 +170,21 @@ resource "azurerm_network_interface_security_group_association" "vm-sg-asoc" {
 
 # Create Virtual Machine (VM)
 resource "azurerm_linux_virtual_machine" "vm-linux" {
-  name                            = "${var.prefix}-vm"
-  resource_group_name             = azurerm_resource_group.vpn-rg.name
-  location                        = azurerm_resource_group.vpn-rg.location
-  size                            = "Standard_D2s_v3"
+  name = "vm-linux-${var.prefix}"
+  #  name                = "vm-windowws-${var.prefix}" 
+  resource_group_name = azurerm_resource_group.vpn-rg.name
+  location            = azurerm_resource_group.vpn-rg.location
+  size                = "Standard_D2s_v3"
 
   # When an admin_password is specified disable_password_authentication must be set to false. ~> NOTE: One of either admin_password or admin_ssh_key must be specified.
-/*   admin_ssh_key {
+  /*   admin_ssh_key {
     username   = "adminuser"
     public_key = file("~/.ssh/id_rsa.pub")
   } */
   admin_username                  = "adminuser"
   admin_password                  = "Admin+123456"
   disable_password_authentication = false
-  
+
   network_interface_ids = [
     azurerm_network_interface.nic-vm.id,
   ]
@@ -199,4 +200,11 @@ resource "azurerm_linux_virtual_machine" "vm-linux" {
     sku       = "20_04-lts-gen2"
     version   = "latest"
   }
+
+  /*   source_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2016-Datacenter"
+    version   = "latest"
+  } */
 }
