@@ -18,7 +18,8 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "vpn-subnet" {
-  name                 = "GatewaySubnet" # "vpn-subnet-${var.prefix}"
+  # Fix name for Virtual Network Gateway subnet
+  name                 = "GatewaySubnet"
   resource_group_name  = azurerm_resource_group.vpn-rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.azure_gateway_subnet_prefix

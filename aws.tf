@@ -85,8 +85,6 @@ resource "aws_vpn_connection" "ToAzureInstance0" {
   type                = "ipsec.1"
   static_routes_only  = true
 
-  # tunnel1_inside_cidr   = azurerm_subnet.vpn-subnet.address_prefixes
-  # tunnel2_inside_cidr   = azurerm_subnet.vpn-subnet.address_prefixes
   tunnel1_preshared_key = random_password.AWSTunnel1ToInstance0-PSK.result
   tunnel2_preshared_key = random_password.AWSTunnel2ToInstance0-PSK.result
 
@@ -115,7 +113,7 @@ data "aws_ami" "app_ami" {
 
 # Create Amazon Linux-Apache2 EC2-instances
 # 9. Create security group to allow port: Http, Https, SSH, RDP
-resource "aws_security_group" "security-group-web" {
+resource "aws_security_group" "sg-vm" {
   name        = "Allow_inbound_traffic"
   description = "Allow ssh and Azure VNet resources inbound traffic"
   vpc_id      = aws_vpc.aws-vpc.id
@@ -144,7 +142,7 @@ resource "aws_security_group" "security-group-web" {
   }
 
   tags = {
-    Name = "security-group-web"
+    Name = "sg-vm"
   }
 }
 
@@ -154,7 +152,7 @@ resource "aws_instance" "web-linux" {
   key_name                    = aws_key_pair.key_pair.key_name
   subnet_id                   = aws_subnet.vpn-subnet.id
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.security-group-web.id]
+  vpc_security_group_ids      = [aws_security_group.sg-vm.id]
 
   tags = {
     Name = "ec2-linux"
