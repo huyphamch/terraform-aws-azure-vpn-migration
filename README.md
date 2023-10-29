@@ -34,5 +34,7 @@ for this scenario.
 <br /> 4. Now you can apply the terraform changes.
 <br /> terraform init
 <br /> terraform apply --auto-approve
-<br /> 5. At the end you can cleanup the created AWS resources.
+<br /> 5. Connect to VMs and ping the other VMs.
+<br /> Test result: Ping answer messages received.
+<br /> 6. At the end you can cleanup the created AWS resources.
 <br /> terraform destroy --auto-approve
