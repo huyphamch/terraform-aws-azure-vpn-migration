@@ -6,18 +6,20 @@ Create an architecture and the step-by-step guide to provide a solution
 for this scenario.
 
 <br />Features of the project:
-• Virtual network and subnet in Azure
-• Virtual private cloud in AWS
-• Gateways in AWS and Azure
+<br />• Virtual network and subnet in Azure
+<br />• Virtual private cloud in AWS
+<br />• Gateways in AWS and Azure
 
 ## Solution
 ![Image](https://github.com/huyphamch/terraform-aws-azure-vpn-migration/blob/main/diagrams/IT-Architecture.png)
-<br />1. Creating a Virtual Network and a subnet in Azure
-<br />2. Creating a Virtual Network Gateway
-<br />3. Creating a Virtual Private Cloud in AWS
-<br />4. Creating a Gateways in AWS
-<br />5. Creating a connection in Azure Virtual Network Gateway
-<br />6. Testing the connection
+Build a VPN connection in Azure and AWS and set security rules to allow communication between VMs in an multicloud environment.
+<br />Tasks:
+<br />1. Creating a Virtual Network and a subnet for VPN and VM in Azure
+<br />2. Creating Gateways in Azure
+<br />3. Creating a Virtual Private Cloud (VPC) and a subnet for VM in AWS
+<br />4. Creating Gateways in AWS
+<br />5. Creating a VPN connection between Azure and AWS network
+<br />6. Testing the VPN connection
 
 ## Usage
 <br /> 1. Open terminal
