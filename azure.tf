@@ -5,11 +5,13 @@ provider "azurerm" {
   features {}
 }
 
+# Create resource group to group all created Azure resources
 resource "azurerm_resource_group" "vpn-rg" {
   name     = "rg-${var.prefix}"
   location = var.azure_location
 }
 
+# Create Virtual Network (VNET)
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
@@ -17,6 +19,7 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = var.azure_vnet_prefix
 }
 
+# Create subnet for VPN Gateway
 resource "azurerm_subnet" "vpn-subnet" {
   # Fix name for Virtual Network Gateway subnet
   name                 = "GatewaySubnet"
@@ -25,6 +28,7 @@ resource "azurerm_subnet" "vpn-subnet" {
   address_prefixes     = var.azure_gateway_subnet_prefix
 }
 
+# Create public IP for VPN Gateway
 resource "azurerm_public_ip" "VNet1GWpip" {
   name                = "pip-vpn-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
@@ -34,6 +38,7 @@ resource "azurerm_public_ip" "VNet1GWpip" {
   sku               = "Standard"
 }
 
+# Create VPN Gateway and attach gateway to VNET
 resource "azurerm_virtual_network_gateway" "VNet1GW" {
   name                = "vpn-${var.prefix}"
   location            = azurerm_resource_group.vpn-rg.location
